@@ -29,6 +29,7 @@ sumSquareOrSquareSum2 x y = (\sumSquare squareSum ->
 
 doubleDouble x = (\dubs -> dubs*2) (x * 2)
 
+-- using a `let` exrepssion
 sumSquareOrSquareSum3 x y =
     let sumSquare = (x^2 + y^2)
         squareSum = (x+y)^2
