@@ -35,3 +35,25 @@ myHead []     = error "No head for empty list"
 
 myTail (_:xs) = xs
 myTail []     = error "no tail for empty list"
+
+myDrop n (x:xs) = if n == 1
+    then xs
+    else myDrop (n - 1) xs
+myDrop n [] = []
+
+myLen []     = 0
+myLen (x:xs) = 1 + myLen xs
+
+myTake _ []     = []
+myTake 0 _      = []
+myTake n (x:xs) = x : rest
+    where rest = myTake (n - 1) xs
+
+finiteCycle (first:rest) = first:rest ++ [first]
+
+myCycle (first:rest) = first:myCycle (rest ++ [first])
+
+ackermann 0 n = n + 1
+ackermann m 0 = ackermann(m - 1) 1
+ackermann m n = ackermann(m - 1) (ackermann m (n - 1))
+
