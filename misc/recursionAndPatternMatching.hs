@@ -2,6 +2,7 @@
 -- The secret to writing recursive functions is to not think about the recursion!
 -- Thinking about recursion too much leads to headaches. The way to solve recursive
 -- functions is by following this simple set of rules:
+--
 --  1 Identify the end goal(s).
 --  2 Determine what happens when a goal is reached.
 --  3 List all alternate possibilities.
@@ -57,3 +58,17 @@ ackermann 0 n = n + 1
 ackermann m 0 = ackermann(m - 1) 1
 ackermann m n = ackermann(m - 1) (ackermann m (n - 1))
 
+-- Collatz Conjecture
+collatz 1 = 1
+collatz n = if even n
+    then
+        1 + collatz (n `div` 2)
+    else
+        1 + collatz (n * 3 + 1)
+
+myReverse []     = []
+myReverse (x:xs) = myReverse xs ++ [x]
+
+fib 0 = 0
+fib 1 = 1
+fib n = fib (n - 1) + fib (n - 2)
