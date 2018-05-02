@@ -1,5 +1,6 @@
 -- parameterized types
 import           Data.Char
+import           Data.List
 import qualified Data.Map  as Map
 
 data Box a = Box a deriving Show
@@ -104,3 +105,82 @@ organInvPairs = zip organs (repeat 23)
 
 organInventory :: Map.Map Organ Int
 organInventory = Map.fromList organInvPairs
+
+-- Maybe
+
+possibleDrawers :: [Int]
+possibleDrawers = [1..50]
+
+getDrawerContents :: [Int] -> Map.Map Int Organ -> [Maybe Organ]
+getDrawerContents ids catalog = map getContents ids
+  where getContents = \id -> Map.lookup id catalog
+
+availableOrgans :: [Maybe Organ]
+availableOrgans = getDrawerContents possibleDrawers organCatalog
+
+countOrgan :: Organ -> [Maybe Organ] -> Int
+countOrgan organ available = length (filter (\x -> x == Just organ) available)
+
+-- Data.Maybe implements `isJust` and `isNothing`
+isSomething :: Maybe Organ -> Bool
+isSomething Nothing  = False
+isSomething (Just _) = True
+
+justTheOrgans :: [Maybe Organ]
+justTheOrgans = filter isSomething availableOrgans
+
+showOrgan :: Maybe Organ -> String
+showOrgan Nothing      = ""
+showOrgan (Just organ) = show organ
+
+organList :: [String]
+organList = map showOrgan justTheOrgans
+
+-- `intercalate` is like `join` in other languages
+cleanList :: String
+cleanList = intercalate ", " organList
+
+numOrZero :: Maybe Int -> Int
+numOrZero Nothing    = 0
+numOrZero (Just num) = num
+
+data Container = Vat Organ | Cooler Organ | Bag Organ
+
+instance Show Container where
+    show (Vat organ)    = show organ ++ " in a vat"
+    show (Cooler organ) = show organ ++ " in a cooler"
+    show (Bag organ)    = show organ ++ " in a bag"
+
+data Location = Lab | Kitchen | Bathroom deriving Show
+
+organToContainer :: Organ -> Container
+organToContainer Brain = Vat Brain
+organToContainer Heart = Cooler Heart
+organToContainer organ = Bag organ
+
+placeInLocation :: Container -> (Location, Container)
+placeInLocation (Vat a)    = (Lab, Vat a)
+placeInLocation (Cooler a) = (Lab, Cooler a)
+placeInLocation (Bag a)    = (Kitchen, Bag a)
+
+process :: Organ -> (Location, Container)
+process organ = placeInLocation (organToContainer organ)
+
+report :: (Location, Container) -> String
+report (location, container) = show container ++ " in the " ++ show location
+
+processAndReport :: (Maybe Organ) -> String
+processAndReport Nothing      = "error, nothing found"
+processAndReport (Just organ) = report (process organ)
+
+processRequest :: Int -> Map.Map Int Organ -> String
+processRequest id catalog = processAndReport organ
+    where organ = Map.lookup id catalog
+
+report2 :: (Maybe (Location, Container)) -> String
+report2 Nothing = "nothing found"
+report2 (Just (location, container)) = show container ++ " in the " ++ show location
+
+emptyDrawers :: [(Maybe Organ)] -> Int
+emptyDrawers drawerList = length (filter (\x -> x == Nothing) drawerList)
+
