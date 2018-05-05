@@ -64,8 +64,6 @@ combineTS (TS t1 v1) (TS t2 v2) = TS completeTimes combinedValues
           updatedMap = foldl insertMaybePair tvMap (zip t2 v2)
           combinedValues = map (\v -> Map.lookup v updatedMap) completeTimes
 
-
-
 -- example data
 
 ts1 :: TS Double
