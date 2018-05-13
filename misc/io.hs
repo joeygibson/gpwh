@@ -15,4 +15,16 @@ mystery2 val1 val2 = do
 safeValue = (mystery1 2 4) + (mystery1 5 6)
 
 -- this one won't work
-unsafeValue = (mystery2 2 4) + (mystery2 5 6)
+-- unsafeValue = (mystery2 2 4) + (mystery2 5 6)
+-- unsafeValue = (mystery1 2 4) + (mystery2 5 6)
+
+helloPerson :: String -> String
+helloPerson name = "Hello, " ++ name ++ "!"
+
+main :: IO ()
+main = do
+    putStrLn "Hello! What is your name?"
+    name <- getLine
+    let statement = helloPerson name
+    putStrLn statement
+
